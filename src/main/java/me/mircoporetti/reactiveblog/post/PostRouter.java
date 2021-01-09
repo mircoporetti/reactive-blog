@@ -6,15 +6,19 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
-import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
 public class PostRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> getAllEmployeesRoute(PostHandler postHandler) {
+    public RouterFunction<ServerResponse> getAllPosts(PostHandler postHandler) {
         return route(GET("/posts").and(accept(MediaType.APPLICATION_JSON)), postHandler::allPosts);
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> insertPost(PostHandler postHandler) {
+        return route(POST("/posts").and(accept(MediaType.APPLICATION_JSON)), postHandler::insertPost);
     }
 }

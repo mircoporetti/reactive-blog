@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @SpringBootTest
@@ -14,10 +15,14 @@ import reactor.test.StepVerifier;
 public class PostHandlerIntegrationTest {
 
     @Autowired
+    private MongoPostRepository mongoPostRepository;
+    @Autowired
     private WebTestClient webTestClient;
 
     @Test
     public void allPosts() {
+        Post postToBeRetrieved = new Post("anId", "an awesome post");
+        mongoPostRepository.insert(postToBeRetrieved).block();
 
         Flux<Post> flux = webTestClient.get().uri("/posts")
                 .accept(MediaType.APPLICATION_JSON)
@@ -28,10 +33,24 @@ public class PostHandlerIntegrationTest {
 
         StepVerifier.create(flux)
                 .expectSubscription()
-                .expectNext(new Post("Hey man this is the first post!"))
-                .expectNext(new Post("Hi! This post is super interesting!"))
-                .expectNext(new Post("Here is the last post, bye bye mister!"))
+                .expectNext(postToBeRetrieved)
                 .verifyComplete();
+
+        mongoPostRepository.delete(postToBeRetrieved).block();
+    }
+
+    @Test
+    public void insertPost() {
+        Post postToBeSaved = new Post("anId", "an awesome post");
+
+        webTestClient.post().uri("/posts")
+                .body(Mono.just(postToBeSaved), Post.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .returnResult(Post.class)
+                .getResponseBody();
+
+        mongoPostRepository.delete(postToBeSaved).subscribe();
     }
 }
 
