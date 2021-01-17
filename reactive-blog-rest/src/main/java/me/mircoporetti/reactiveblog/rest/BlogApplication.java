@@ -1,4 +1,4 @@
-package me.mircoporetti.reactiveblog;
+package me.mircoporetti.reactiveblog.rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

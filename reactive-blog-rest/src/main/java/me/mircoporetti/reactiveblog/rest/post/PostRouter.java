@@ -1,4 +1,4 @@
-package me.mircoporetti.reactiveblog.post;
+package me.mircoporetti.reactiveblog.rest.post;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
