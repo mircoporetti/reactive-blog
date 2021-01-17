@@ -1,5 +1,8 @@
 package me.mircoporetti.reactiveblog.rest.post;
 
+import me.mircoporetti.reactiveblog.domain.post.GetAllPostsUseCase;
+import me.mircoporetti.reactiveblog.domain.post.NewPostUseCase;
+import me.mircoporetti.reactiveblog.domain.post.Post;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -11,20 +14,22 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @Component
 public class PostHandler {
 
-    private final PostReactiveMongoRepository postReactiveMongoRepository;
+    private final GetAllPostsUseCase getAllPostsUseCase;
+    private final NewPostUseCase newPostUseCase;
 
-    public PostHandler(PostReactiveMongoRepository postReactiveMongoRepository) {
-        this.postReactiveMongoRepository = postReactiveMongoRepository;
+    public PostHandler(GetAllPostsUseCase getAllPostsUseCase, NewPostUseCase newPostUseCase) {
+        this.getAllPostsUseCase = getAllPostsUseCase;
+        this.newPostUseCase = newPostUseCase;
     }
 
     public Mono<ServerResponse> allPosts(ServerRequest serverRequest){
-        return ok().body(postReactiveMongoRepository.findAll(), Post.class);
+        return ok().body(getAllPostsUseCase.execute(), Post.class);
     }
 
     public Mono<ServerResponse> insertPost(ServerRequest serverRequest){
         return serverRequest.bodyToMono(Post.class)
                 .flatMap(post -> ServerResponse.created(serverRequest.uri())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(postReactiveMongoRepository.save(post), Post.class));
+                        .body(newPostUseCase.execute(post), Post.class));
     }
 }

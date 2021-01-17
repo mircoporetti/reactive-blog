@@ -10,6 +10,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>reactive-blog-rest</module>
+        <module>reactive-blog-domain</module>
+        <module>reactive-blog-mongodb-adapter</module>
     </modules>
 
     <properties>

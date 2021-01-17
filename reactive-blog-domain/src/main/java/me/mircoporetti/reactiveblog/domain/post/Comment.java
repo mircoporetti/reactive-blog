@@ -1,4 +1,4 @@
-package me.mircoporetti.reactiveblog.rest.post;
+package me.mircoporetti.reactiveblog.domain.post;
 
 import java.util.Objects;
 

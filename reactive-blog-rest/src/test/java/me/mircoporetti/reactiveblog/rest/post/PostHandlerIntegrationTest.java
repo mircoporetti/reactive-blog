@@ -1,5 +1,8 @@
 package me.mircoporetti.reactiveblog.rest.post;
 
+import me.mircoporetti.reactiveblog.domain.post.Post;
+import me.mircoporetti.reactiveblog.mongodbrepository.post.MongoPost;
+import me.mircoporetti.reactiveblog.mongodbrepository.post.PostReactiveMongoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -23,7 +26,9 @@ public class PostHandlerIntegrationTest {
 
     @Test
     public void allPosts() {
-        Post postToBeRetrieved = new Post("anId", "an awesome post", Collections.emptyList());
+        MongoPost postToBeRetrieved = new MongoPost("anId", "an awesome post", Collections.emptyList());
+        Post result = new Post("anId", "an awesome post", Collections.emptyList());
+
         postReactiveMongoRepository.insert(postToBeRetrieved).block();
 
         Flux<Post> flux = webTestClient.get().uri("/posts")
@@ -35,7 +40,7 @@ public class PostHandlerIntegrationTest {
 
         StepVerifier.create(flux)
                 .expectSubscription()
-                .expectNext(postToBeRetrieved)
+                .expectNext(result)
                 .verifyComplete();
 
         postReactiveMongoRepository.delete(postToBeRetrieved).block();
@@ -52,7 +57,8 @@ public class PostHandlerIntegrationTest {
                 .returnResult(Post.class)
                 .getResponseBody();
 
-        postReactiveMongoRepository.delete(postToBeSaved).subscribe();
+        MongoPost postToBeDeleted = new MongoPost("anId", "an awesome post", Collections.emptyList());
+        postReactiveMongoRepository.delete(postToBeDeleted).subscribe();
     }
 }
 
