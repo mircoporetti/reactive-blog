@@ -1,0 +1,13 @@
+POST http://localhost:8085/posts
+Content-Type: application/json
+
+{
+ "message": "Ehi this is an interesting post!"
+}
+
+###
+GET http://localhost:8085/posts
+
+
+
+
