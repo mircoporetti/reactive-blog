@@ -23,4 +23,4 @@ Compile everything:
 
 Run the application:
 
-    java -jar reactive-blog-rest/target/reactive-blog.jar
+    java -jar web-application/target/reactive-blog.jar    

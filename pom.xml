@@ -9,9 +9,9 @@
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <modules>
-        <module>reactive-blog-rest</module>
-        <module>reactive-blog-domain</module>
-        <module>reactive-blog-mongodb-adapter</module>
+        <module>web-application</module>
+        <module>domain</module>
+        <module>mongodb-adapter</module>
     </modules>
 
     <parent>
