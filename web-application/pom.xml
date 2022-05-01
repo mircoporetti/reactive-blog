@@ -24,13 +24,13 @@
         </dependency>
         <dependency>
             <groupId>me.mircoporetti</groupId>
-            <artifactId>reactive-blog-domain</artifactId>
+            <artifactId>domain</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.mircoporetti</groupId>
-            <artifactId>reactive-blog-mongodb-adapter</artifactId>
+            <artifactId>mongodb-adapter</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
