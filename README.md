@@ -4,6 +4,7 @@ A very simple REST service using Project Reactor.
 
 In this example I will use a functional approach using
 Routers and Handlers instead of Controllers.
+The app is structured inspiring by Clean Architecture and Hexagonal Architecture.
 
 <h3>Requirements</h3>
     
