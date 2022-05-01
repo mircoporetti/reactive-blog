@@ -7,20 +7,15 @@ Routers and Handlers instead of Controllers.
 
 <h3>Requirements</h3>
     
-  - Docker
   - Java 17
-  - Maven 3.x
+  - Docker
 
 <h3>How to run it?</h3>
 
-Create a Mongo Database:
-
-    docker compose up
-
 Compile everything:
 
-    mvn clean package
+    ./mvnw clean package
 
-Run the application:
+Create the database and run the application:
 
-    java -jar web-application/target/reactive-blog.jar    
+    docker compose up   

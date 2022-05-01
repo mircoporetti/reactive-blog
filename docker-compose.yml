@@ -1,6 +1,7 @@
 version: '3.7'
 services:
-  mongodb_container:
+  reactive_blog_mongodb:
+    container_name: reactiveblogmongo
     image: mongo:4.4.3
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -9,6 +10,19 @@ services:
       - 27017:27017
     volumes:
       - mongodb_data_container:/data/db
+  reactive_blog_application:
+    image: reactive-blog:0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        jarFile: reactive-blog.jar
+        dbConnection: mongodb://root:password@reactiveblogmongo:27017/reactiveblog?authSource=admin
+    restart: always
+    depends_on:
+      - reactive_blog_mongodb
+    ports:
+      - "8085:8085"
 
 volumes:
   mongodb_data_container:
