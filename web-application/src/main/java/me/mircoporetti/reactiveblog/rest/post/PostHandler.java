@@ -27,7 +27,8 @@ public class PostHandler {
     }
 
     public Mono<ServerResponse> insertPost(ServerRequest serverRequest){
-        return serverRequest.bodyToMono(Post.class)
+        return serverRequest.bodyToMono(PostRequest.class)
+                .map(PostRequest::toPost)
                 .flatMap(post -> ServerResponse.created(serverRequest.uri())
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(newPostUseCase.execute(post), Post.class));
