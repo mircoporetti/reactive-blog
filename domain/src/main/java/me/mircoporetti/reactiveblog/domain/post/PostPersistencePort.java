@@ -8,4 +8,6 @@ public interface PostPersistencePort {
     Flux<Post> findAll();
 
     Mono<Post> save(Post post);
+
+    Mono<Post> addCommentFor(String postId, Comment comment);
 }

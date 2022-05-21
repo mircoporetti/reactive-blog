@@ -1,5 +1,6 @@
 package me.mircoporetti.reactiveblog.rest;
 
+import me.mircoporetti.reactiveblog.domain.post.usecase.CreateNewComment;
 import me.mircoporetti.reactiveblog.domain.post.usecase.GetAllPosts;
 import me.mircoporetti.reactiveblog.domain.post.usecase.CreateNewPost;
 import me.mircoporetti.reactiveblog.domain.post.PostPersistencePort;
@@ -13,13 +14,18 @@ import org.springframework.context.annotation.Import;
 public class BlogConfiguration {
 
     @Bean
+    public GetAllPosts getAllPostsUseCase(PostPersistencePort postPersistencePort){
+        return new GetAllPosts(postPersistencePort);
+    }
+
+    @Bean
     public CreateNewPost newPostUseCase(PostPersistencePort postPersistencePort){
         return new CreateNewPost(postPersistencePort);
     }
 
     @Bean
-    public GetAllPosts getAllPostsUseCase(PostPersistencePort postPersistencePort){
-        return new GetAllPosts(postPersistencePort);
+    public CreateNewComment newCommentUseCase(PostPersistencePort postPersistencePort){
+        return new CreateNewComment(postPersistencePort);
     }
 
 }

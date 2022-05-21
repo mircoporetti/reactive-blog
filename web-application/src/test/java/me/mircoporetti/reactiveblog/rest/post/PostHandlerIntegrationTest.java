@@ -1,5 +1,6 @@
 package me.mircoporetti.reactiveblog.rest.post;
 
+import me.mircoporetti.reactiveblog.domain.post.Comment;
 import me.mircoporetti.reactiveblog.domain.post.Post;
 import me.mircoporetti.reactiveblog.mongodbrepository.post.MongoPost;
 import me.mircoporetti.reactiveblog.mongodbrepository.post.PostReactiveMongoRepository;
@@ -13,6 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -56,7 +58,28 @@ public class PostHandlerIntegrationTest {
                 .returnResult(Post.class);
 
         MongoPost postToBeDeleted = new MongoPost("anId", "an awesome post", Collections.emptyList());
-        postReactiveMongoRepository.delete(postToBeDeleted).subscribe();
+        postReactiveMongoRepository.delete(postToBeDeleted).block();
+    }
+
+
+    @Test
+    public void commentPost() {
+        MongoPost postToBeSaved = new MongoPost("anId", "an awesome post", Collections.emptyList());
+        postReactiveMongoRepository.insert(postToBeSaved).block();
+
+        Comment commentBeSaved = new Comment("An Author Name", "A comment message");
+
+        Post lastPost = webTestClient.post().uri("/posts/anId/comments")
+                .body(Mono.just(commentBeSaved), Comment.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .returnResult(Post.class)
+                .getResponseBody()
+                .blockLast();
+
+        assertThat(lastPost.getComments(), Matchers.is(List.of(commentBeSaved)));
+
+        postReactiveMongoRepository.delete(postToBeSaved).block();
     }
 }
 

@@ -1,5 +1,7 @@
 package me.mircoporetti.reactiveblog.rest.post;
 
+import me.mircoporetti.reactiveblog.domain.post.Comment;
+import me.mircoporetti.reactiveblog.domain.post.usecase.CreateNewComment;
 import me.mircoporetti.reactiveblog.domain.post.usecase.GetAllPosts;
 import me.mircoporetti.reactiveblog.domain.post.usecase.CreateNewPost;
 import me.mircoporetti.reactiveblog.domain.post.Post;
@@ -16,10 +18,12 @@ public class PostHandler {
 
     private final GetAllPosts getAllPosts;
     private final CreateNewPost createNewPost;
+    private final CreateNewComment createNewComment;
 
-    public PostHandler(GetAllPosts getAllPosts, CreateNewPost createNewPost) {
+    public PostHandler(GetAllPosts getAllPosts, CreateNewPost createNewPost, CreateNewComment createNewComment) {
         this.getAllPosts = getAllPosts;
         this.createNewPost = createNewPost;
+        this.createNewComment = createNewComment;
     }
 
     public Mono<ServerResponse> allPosts(ServerRequest serverRequest){
@@ -33,4 +37,14 @@ public class PostHandler {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(createNewPost.execute(post), Post.class));
     }
+
+
+    public Mono<ServerResponse> insertComment(ServerRequest serverRequest){
+        return serverRequest.bodyToMono(Comment.class)
+                .flatMap(comment -> ServerResponse.created(serverRequest.uri())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(createNewComment.execute(serverRequest.pathVariable("postId"), comment),
+                                Post.class));
+    }
+
 }
