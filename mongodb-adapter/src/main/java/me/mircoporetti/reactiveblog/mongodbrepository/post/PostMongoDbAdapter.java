@@ -18,7 +18,8 @@ public class PostMongoDbAdapter implements PostPersistencePort {
 
     @Override
     public Flux<Post> findAll() {
-        return postReactiveMongoRepository.findAll().map(post -> new Post(post.getId(),post.getMessage(), post.getDomainComments()));
+        return postReactiveMongoRepository.findAll()
+                .map(post -> new Post(post.getId(),post.getMessage(), post.getComments()));
     }
 
     @Override
@@ -30,8 +31,7 @@ public class PostMongoDbAdapter implements PostPersistencePort {
     @Override
     public Mono<Post> addCommentFor(String postId, Comment comment) {
         return postReactiveMongoRepository.findById(postId)
-                .flatMap(mongoPost -> postReactiveMongoRepository.save(
-                                mongoPost.addComment(comment))
-                ).map(p -> new Post(p.getId(), p.getMessage(), p.getDomainComments()));
+                .flatMap(mongoPost -> postReactiveMongoRepository.save(mongoPost.addComment(comment)))
+                .map(p -> new Post(p.getId(), p.getMessage(), p.getComments()));
     }
 }

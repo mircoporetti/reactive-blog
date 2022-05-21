@@ -59,10 +59,4 @@ public class MongoPost {
         }
         return new MongoPost(id, message, comments);
     }
-
-    public List<Comment> getDomainComments() {
-        return comments == null ? Collections.emptyList() : comments.stream().map(
-                c -> new Comment(c.getAuthor(), c.getMessage())
-        ).collect(Collectors.toList());
-    }
 }
