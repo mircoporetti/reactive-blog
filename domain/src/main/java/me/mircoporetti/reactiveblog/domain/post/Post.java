@@ -41,4 +41,13 @@ public class Post {
     public int hashCode() {
         return Objects.hash(id, message, comments);
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id='" + id + '\'' +
+                ", message='" + message + '\'' +
+                ", comments=" + comments +
+                '}';
+    }
 }
