@@ -48,7 +48,7 @@ public class PostHandlerIntegrationTest extends IntegrationTest {
 
     @Test
     public void insertPost() {
-        Post postToBeSaved = new Post(null, "an awesome post", Collections.emptyList());
+        PostRequest postToBeSaved = new PostRequest("an awesome post", Collections.emptyList());
 
         webTestClient.post().uri("/posts")
                 .body(Mono.just(postToBeSaved), Post.class)
