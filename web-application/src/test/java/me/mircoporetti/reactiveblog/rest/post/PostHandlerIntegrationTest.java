@@ -53,8 +53,7 @@ public class PostHandlerIntegrationTest extends IntegrationTest {
         webTestClient.post().uri("/posts")
                 .body(Mono.just(postToBeSaved), Post.class)
                 .exchange()
-                .expectStatus().isCreated()
-                .returnResult(Post.class);
+                .expectStatus().isCreated();
 
         MongoPost postToBeDeleted = new MongoPost("anId", "an awesome post", Collections.emptyList());
         postReactiveMongoRepository.delete(postToBeDeleted).block();
