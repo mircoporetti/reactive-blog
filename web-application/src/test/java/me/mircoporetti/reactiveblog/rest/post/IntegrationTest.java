@@ -3,6 +3,7 @@ package me.mircoporetti.reactiveblog.rest.post;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -11,11 +12,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class IntegrationTest {
 
     @Container
-    private static final MongoDBContainer MONGO_DB = new MongoDBContainer("mongo:4.2.5");
+    private static final MongoDBContainer MONGO_DB = new MongoDBContainer("mongo:4.4.3");
 
     @DynamicPropertySource
     private static void mongoDBProperties(final DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", MONGO_DB::getUri);
+        registry.add("spring.data.mongodb.uri", MONGO_DB::getReplicaSetUrl);
     }
 
 }
