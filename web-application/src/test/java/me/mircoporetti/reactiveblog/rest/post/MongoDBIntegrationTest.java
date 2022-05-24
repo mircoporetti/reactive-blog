@@ -9,7 +9,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @Testcontainers
-public abstract class IntegrationTest {
+public abstract class MongoDBIntegrationTest {
 
     @Container
     private static final MongoDBContainer MONGO_DB = new MongoDBContainer("mongo:4.4.3");

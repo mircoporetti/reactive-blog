@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 @AutoConfigureWebTestClient
-public class PostHandlerIntegrationTest extends IntegrationTest {
+public class PostHandlerIntegrationTest extends MongoDBIntegrationTest {
 
     @Autowired
     private PostReactiveMongoRepository postReactiveMongoRepository;
