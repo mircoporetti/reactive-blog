@@ -10,4 +10,6 @@ public interface PostPersistencePort {
     Mono<Post> save(Post post);
 
     Mono<Post> addCommentFor(String postId, Comment comment);
+
+    Mono<Post> findById(String postId);
 }

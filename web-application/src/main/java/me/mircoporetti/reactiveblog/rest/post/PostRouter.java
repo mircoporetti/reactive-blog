@@ -26,4 +26,9 @@ public class PostRouter {
     public RouterFunction<ServerResponse> insertComment(PostHandler postHandler) {
         return route(POST("/posts/{postId}/comments").and(accept(MediaType.APPLICATION_JSON)), postHandler::insertComment);
     }
+
+    @Bean
+    public RouterFunction<ServerResponse> ratePost(PostHandler postHandler) {
+        return route(PATCH("/posts/{postId}/rate").and(accept(MediaType.APPLICATION_JSON)), postHandler::ratePost);
+    }
 }

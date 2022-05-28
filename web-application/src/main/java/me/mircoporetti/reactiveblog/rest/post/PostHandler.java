@@ -5,6 +5,7 @@ import me.mircoporetti.reactiveblog.domain.post.usecase.CreateNewComment;
 import me.mircoporetti.reactiveblog.domain.post.usecase.GetAllPosts;
 import me.mircoporetti.reactiveblog.domain.post.usecase.CreateNewPost;
 import me.mircoporetti.reactiveblog.domain.post.Post;
+import me.mircoporetti.reactiveblog.domain.post.usecase.RatePost;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -19,11 +20,13 @@ public class PostHandler {
     private final GetAllPosts getAllPosts;
     private final CreateNewPost createNewPost;
     private final CreateNewComment createNewComment;
+    private final RatePost ratePost;
 
-    public PostHandler(GetAllPosts getAllPosts, CreateNewPost createNewPost, CreateNewComment createNewComment) {
+    public PostHandler(GetAllPosts getAllPosts, CreateNewPost createNewPost, CreateNewComment createNewComment, RatePost ratePost) {
         this.getAllPosts = getAllPosts;
         this.createNewPost = createNewPost;
         this.createNewComment = createNewComment;
+        this.ratePost = ratePost;
     }
 
     public Mono<ServerResponse> allPosts(ServerRequest serverRequest){
@@ -44,6 +47,14 @@ public class PostHandler {
                 .flatMap(comment -> ServerResponse.created(serverRequest.uri())
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(createNewComment.execute(serverRequest.pathVariable("postId"), comment),
+                                Post.class));
+    }
+
+    public Mono<ServerResponse> ratePost(ServerRequest serverRequest){
+        return serverRequest.bodyToMono(RateRequest.class)
+                .flatMap(rateRequest -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(ratePost.execute(serverRequest.pathVariable("postId"), rateRequest.rating()),
                                 Post.class));
     }
 

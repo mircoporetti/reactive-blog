@@ -8,6 +8,6 @@ import java.util.List;
 public record PostRequest(String message, List<Comment> comments) {
 
     public Post toPost(){
-        return new Post(null, message, comments);
+        return new Post(null, message, comments, 0L, 0L);
     }
 }

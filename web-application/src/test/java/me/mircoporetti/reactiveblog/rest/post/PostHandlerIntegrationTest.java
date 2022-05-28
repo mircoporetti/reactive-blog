@@ -2,6 +2,7 @@ package me.mircoporetti.reactiveblog.rest.post;
 
 import me.mircoporetti.reactiveblog.domain.post.Comment;
 import me.mircoporetti.reactiveblog.domain.post.Post;
+import me.mircoporetti.reactiveblog.domain.post.Rating;
 import me.mircoporetti.reactiveblog.mongodbrepository.post.MongoPost;
 import me.mircoporetti.reactiveblog.mongodbrepository.post.PostReactiveMongoRepository;
 import org.junit.jupiter.api.Test;
@@ -26,8 +27,8 @@ public class PostHandlerIntegrationTest extends MongoDBIntegrationTest {
 
     @Test
     public void allPosts() {
-        MongoPost postToBeRetrieved = new MongoPost("anId", "an awesome post", Collections.emptyList());
-        Post result = new Post("anId", "an awesome post", Collections.emptyList());
+        MongoPost postToBeRetrieved = new MongoPost("anId", "an awesome post", Collections.emptyList(), 0L, 0L);
+        Post result = new Post("anId", "an awesome post", Collections.emptyList(), 0L, 0L);
 
         postReactiveMongoRepository.insert(postToBeRetrieved).block();
 
@@ -61,7 +62,7 @@ public class PostHandlerIntegrationTest extends MongoDBIntegrationTest {
 
     @Test
     public void commentPost() {
-        MongoPost postToBeSaved = new MongoPost("anId", "an awesome post", Collections.emptyList());
+        MongoPost postToBeSaved = new MongoPost("anId", "an awesome post", Collections.emptyList(), 0L, 0L);
         postReactiveMongoRepository.insert(postToBeSaved).block();
 
         Comment commentBeSaved = new Comment("An Author Name", "A comment message");
@@ -76,6 +77,29 @@ public class PostHandlerIntegrationTest extends MongoDBIntegrationTest {
         StepVerifier.create(post)
                 .expectSubscription()
                 .expectNextMatches(p -> p.getComments().equals(List.of(commentBeSaved)))
+                .verifyComplete();
+
+        postReactiveMongoRepository.delete(postToBeSaved).block();
+    }
+
+
+    @Test
+    public void ratePost() {
+        MongoPost postToBeSaved = new MongoPost("anId", "an awesome post", Collections.emptyList(), 0L, 0L);
+        postReactiveMongoRepository.insert(postToBeSaved).block();
+
+        RateRequest rateRequest = new RateRequest(Rating.LIKE);
+
+        Flux<Post> post = webTestClient.patch().uri("/posts/anId/rate")
+                .body(Mono.just(rateRequest), RateRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(Post.class)
+                .getResponseBody();
+
+        StepVerifier.create(post)
+                .expectSubscription()
+                .expectNextMatches(p -> (p.getLikes().equals(1L) && p.getDislikes().equals(0L)))
                 .verifyComplete();
 
         postReactiveMongoRepository.delete(postToBeSaved).block();
